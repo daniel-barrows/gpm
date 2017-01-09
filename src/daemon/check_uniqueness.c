@@ -38,9 +38,13 @@ void check_uniqueness(void)
       fscanf(fp, "%d", &old_pid);
       if (kill(old_pid,0) == -1) {
          gpm_report(GPM_PR_INFO,GPM_MESS_STALE_PID, GPM_NODE_PID);
+	 fclose(fp);
          unlink(GPM_NODE_PID);
-      } else /* we are really running, exit asap! */
+      } else {
+	  /* we are really running, exit asap! */
          gpm_report(GPM_PR_OOPS,GPM_MESS_ALREADY_RUN, old_pid);
+	 fclose(fp);
+      }
    }
    /* now try to sign ourself */
    if ((fp = fopen(GPM_NODE_PID,"w")) != NULL) {
